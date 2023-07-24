@@ -1,11 +1,11 @@
 import { Schema, model, mongoose } from "mongoose";
 
 const RentalSchema = new Schema({
-    user:{
+    User:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer"
+        ref: "User",
     },
-    books:{
+    Book:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Book"
     },

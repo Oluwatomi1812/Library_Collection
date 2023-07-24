@@ -1,5 +1,5 @@
 import joiObjectid from "joi-objectid";
-import { Schema, model } from "mongoose";
+import { Mongoose, Schema, model } from "mongoose";
 
 const BookSchema = new Schema({
     title:{
@@ -18,7 +18,12 @@ const BookSchema = new Schema({
     },
     numberInStock:{
         type: Number,
-        required: true
+        required: true,
+        min:0,
+        max: 100
+    },
+    _id:{
+        type: Schema.Types.ObjectId
     }
 })
 
