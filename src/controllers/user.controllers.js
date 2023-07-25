@@ -67,4 +67,72 @@ export default class UserControllers{
         data: user
     })
   }
+  static async listAllUsers(req, res, next){
+    try{
+      const users = await User.find().sort("firstname")
+      if(users.length == 0){
+        res.json({
+          message:"No Users at this moment"
+        })
+      }
+      res.status(200).json({
+        status:"Successful!",
+        message:"All users listed below",
+        users
+      })
+    }
+    catch(err){
+      res.status(404).json(err.message)
+      next(err)
+    }
+  }
+  static async updateUser(req, res, next){
+    try{
+      const userId = req.query.userId
+      const user = await User.findById(userId)
+      if(!user){
+        res.status(404).json({
+          status:"Failed!",
+          message:"User not found"
+        })
+      }
+      await User.updateOne({_id: userId}, {$set: {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+      }})
+      res.status(200).json({
+        status:"Successful!",
+        message:"User Information has been updated",
+        user
+      })
+    }
+    catch(err){
+      res.status(400).json(err.message)
+      next(err)
+    }
+  }
+  static async deleteUser(req, res, next){
+    try{
+      const userId = req.query.userId
+      const user = await User.findById(userId)
+      if(!user){
+        res.status(404).json({
+          status:"Failed!",
+          message:"User not found"
+        })
+      }
+      await User.deleteOne({_id:user.id})
+      res.status(200).json({
+        status:"Successful!",
+        message:"User Account has been deleted"
+      })
+    }
+    catch(err){
+      res.status(400).json(err.message)
+      next(err)
+    }
+  }
 }

@@ -26,7 +26,6 @@ const userSchema = new Schema({
             match: [/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, "Please add a valid email string to the email path."]
           },
         required: true,
-        immutable: true,
         lowercase: true,
         unique: true
     },

@@ -2,6 +2,8 @@ import Rental from "../models/rental.model.js"
 import  User from "../models/user.model.js"
 import Book from "../models/library.model.js"
 export default class RentalControllers{
+//ROUTE
+ //localhost/library/newRental?bookId=...&userId=...
     static async createRentals (req, res, next) {
         try {
             const bookId = req.query.bookId
@@ -25,17 +27,22 @@ export default class RentalControllers{
 
             const rental = await Rental.create({ dateOut, dateReturned})
             await Book.updateOne({_id: book.id},{$inc: {numberInStock:-1}})
-            await rental.populate("User", { name:1 })
-            await rental.populate("Book", {title: 1})
-            
-            res.status(200).json(rental)
+           
+            res.status(200).json({
+                rental,
+                userData:{
+                    username: user.username,
+                    title: book.title
+            }
+        })
 
         } catch (err) {
             res. json(err.message)
             next(err)
         }
     }
-        
+//ROUTE
+//localhost/library/findRental?rentalId=...
     static async getRental (req, res, next) {
         try {
             const rentalId = req.query.rentalId
@@ -57,7 +64,8 @@ export default class RentalControllers{
             next(err)
         }
     }
-    
+    //ROUTE
+    //localhost/library/getAll
     static async getAllRentals (req, res, next) {
         try {
             const rentals = await Rental.find().sort("dateOut")
@@ -76,9 +84,8 @@ export default class RentalControllers{
             next(err)
         }
     }
-
-// UPDATE a rental using PUT method
-// routes: /api/v1/rentals
+//ROUTE
+//localhost/library/updateRental?rentalId=...
     static async updateRental (req, res, next) {
         try {
             const rentalId = req.query.rentalId
@@ -88,35 +95,45 @@ export default class RentalControllers{
                     message: "No rental found"
                 })
             }
-            const rentol ={ 
+            const update ={ 
                 bookId: req.body.bookId,
                 userId: req.body.userId,
                 dateOut: req.body.dateOut,
                 dateReturned: req.body.dateReturned
-    
             }
 
-            if (!rentol.bookId || !rentol.dateReturned || !rentol.userId) {
+            if (!update.bookId || !update.dateReturned || !update.userId) {
                 return res.status(404).json({
                     message: "All fields are mandatory"
                 })
             }
-            await Rental.updateOne({_id: rental.id})
+            await Rental.updateOne({_id: rental.id}, {dateOut :update.dateOut}, {dateReturned :update.dateReturned})
+            const userId = update.userId
+            const user = await User.findById(userId)
+            
+            const bookId = update.bookId
+            const book = await Book.findById(bookId)
             res.status(200).json({
                 message: "Rental updated successfully",
-                rental
-            })
+                rental,
+                userData:{
+                    username: user.username,
+                    title: book.title
+            }
+        })
 
         } catch (err) {
-            res.status.json(err.message)
+            res.status(404).json(err.message)
             next(err)
         }
     }
-
+//ROUTE
+//localhost/library/deleteRental?rentalId=...
     static async deleteRental (req, res, next) {
         try {
-            const rental = await Rental.find({_id:req.params.id})
-            if (!rental) return res.status(404).json({
+            const rentalId = req.query.rentalId
+            const rental = await Rental.findById(rentalId)
+           if (!rental) return res.status(404).json({
                 message: "Rental data not found"
             })
 

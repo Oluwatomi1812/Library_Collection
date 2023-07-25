@@ -5,11 +5,16 @@ import RentalControllers from "../controllers/rental.controllers.js"
 const router = express.Router()
 
 router.post("/signup", UserControllers.createUser)
-router.get("/find", UserControllers.findUser)
+router.get("/findUser", UserControllers.findUser)
 router.post("/login", UserControllers.userLogin)
+router.get("/findAll", UserControllers.listAllUsers)
+router.put("/updateUser", UserControllers.updateUser)
+router.delete("/deleteUser", UserControllers.deleteUser)
 
 router.post("/newBook", LibraryController.addBook)
 router.get("/findBook", LibraryController.searchBook)
+router.put("/updateBook", LibraryController.updateBook)
+router.delete("/deleteBook", LibraryController.deleteBook)
 
 router.post("/newRental", RentalControllers.createRentals)
 router.get("/findRental", RentalControllers.getRental)

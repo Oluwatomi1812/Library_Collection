@@ -3,6 +3,7 @@ import dotenv from "dotenv"
 import morgan from "morgan"
 import mongoose from "mongoose"
 import {router} from "./src/routes/user.routers.js"
+import {globalErrorHandler} from "./src/utils/errorHandler.js"
 
 dotenv.config()
 const app = express()
@@ -19,6 +20,7 @@ db.once('open', function() {
 
 app.use(morgan("tiny"))
 app.use(express.json())
+app.use(globalErrorHandler)
 app.use("/library", router)
 
 
