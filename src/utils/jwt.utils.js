@@ -1,13 +1,15 @@
-import {jwt, verify} from "jsonwebtoken"
+import pkg from 'jsonwebtoken';
+const jwt = pkg;
+const verify = pkg;
 import dotenv from "dotenv"
 dotenv.config()
 
 //Generating the token
-export function generateToken(user){
+export function generateToken(newUser){
     const payload = {
-        _id: user._id,
-        email: user.email,
-        username: user.username
+        _id: newUser._id,
+        email: newUser.email,
+        username: newUser.username
     }
     const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 60*60*24});
     return token

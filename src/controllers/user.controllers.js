@@ -2,7 +2,7 @@ import User from "../models/user.model.js"
 import {mongoIdValidator} from "../validators/mongoId.validator.js"
 import { createUserValidator, loginUserValidator } from "../validators/user.validator.js"
 import {UserRequestError, NotFoundError} from "../errors/error.js"
-
+import { generateToken } from "../utils/jwt.utils.js"
 
 export default class UserControllers{
     static async createUser(req, res, next){
@@ -24,7 +24,10 @@ export default class UserControllers{
             res.status(200).json({
                 status: "Successful",
                 message: "New user created successfully",
-                data: newUser
+                data: {
+                    newUser,
+                    access_token: generateToken(newUser)
+                }
             })
         }
         catch(err){
@@ -64,7 +67,10 @@ export default class UserControllers{
     res.status(200).json({
         status: "Successful",
         message:"User successfully logged in",
-        data: user
+        data: {
+          user,
+          access_token: generateToken(user)
+      }
     })
   }
   static async listAllUsers(req, res, next){
