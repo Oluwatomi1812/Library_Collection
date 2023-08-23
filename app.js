@@ -2,7 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import morgan from "morgan"
 import mongoose from "mongoose"
-import {router} from "./src/routes/user.routers.js"
+import {router} from "./src/routes/routes.js"
 import {globalErrorHandler} from "./src/utils/errorHandler.js"
 
 dotenv.config()

@@ -51,6 +51,23 @@ static async searchBook(req, res, next) {
       next(err);
     }
   }
+  static async listAllBooks(req, res, next){
+    try{
+      const books = await Book.find().sort("title")
+            if (books.length === 0) return res.status(404).json({
+                message: "There are no books at this moment"
+            })
+
+            res.status(200).json({
+                message: "List of all Books",
+                books
+            })
+    }
+    catch(err){
+      res.status(400).json(err.message)
+      next(err)
+    }
+  }
   static async updateBook(req, res, next){
     try{
       const bookId = req.query.bookId
